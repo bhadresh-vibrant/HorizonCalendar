@@ -437,6 +437,7 @@ public final class CalendarViewContent {
       invariantViewProperties: .baseNonInteractive,
       content: .init(
         dayText: "\(day.day)",
+        eventCountText: "",
         accessibilityLabel: dayDateFormatter.string(from: date),
         accessibilityHint: nil
       )

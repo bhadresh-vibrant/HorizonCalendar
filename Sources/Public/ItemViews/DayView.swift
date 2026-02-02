@@ -21,6 +21,20 @@ import UIKit
 public final class DayView: UIView {
 
   // MARK: Lifecycle
+    @IBOutlet private weak var contentView: UIView!
+    @IBOutlet weak var dayView: UIView!
+    @IBOutlet weak var dayLabel: UILabel!
+    @IBOutlet weak var indicateView: UIView!
+    @IBOutlet weak var eventCounterLabel: UILabel!
+    
+    private func loadFromNib() {
+        let nib = UINib(nibName: "DayView", bundle: Bundle(for: DayView.self))
+        nib.instantiate(withOwner: self, options: nil)
+
+        contentView.frame = bounds
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(contentView)
+    }
 
   fileprivate init(invariantViewProperties: InvariantViewProperties) {
     self.invariantViewProperties = invariantViewProperties
@@ -50,12 +64,14 @@ public final class DayView: UIView {
       highlightLayer?.lineWidth = highlightShapeDrawingConfig.borderWidth
     }
 
-    label = UILabel()
-    label.font = invariantViewProperties.font
-    label.textAlignment = invariantViewProperties.textAlignment
-    label.textColor = invariantViewProperties.textColor
-
     super.init(frame: .zero)
+      
+      loadFromNib()
+      if dayLabel != nil {
+          dayLabel.font = invariantViewProperties.font
+          dayLabel.textAlignment = invariantViewProperties.textAlignment
+          dayLabel.textColor = invariantViewProperties.textColor
+      }
 
     self.isUserInteractionEnabled = isUserInteractionEnabled
 
@@ -63,8 +79,6 @@ public final class DayView: UIView {
 
     layer.addSublayer(backgroundLayer)
     highlightLayer.map { layer.addSublayer($0) }
-
-    addSubview(label)
 
     setHighlightLayerVisibility(isHidden: true, animated: false)
 
@@ -108,12 +122,6 @@ public final class DayView: UIView {
     backgroundLayer.path = path
     highlightLayer?.path = path
 
-    label.frame = CGRect(
-      x: edgeInsets.leading,
-      y: edgeInsets.top,
-      width: insetBounds.width,
-      height: insetBounds.height
-    )
   }
 
   public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -149,9 +157,10 @@ public final class DayView: UIView {
   // MARK: Fileprivate
 
   fileprivate func setContent(_ content: Content) {
-    label.text = content.dayText
-
-    accessibilityLabel = content.accessibilityLabel
+    dayLabel.text = content.dayText
+      eventCounterLabel.text = content.eventCountText
+      eventCounterLabel.textColor = .green
+      accessibilityLabel = content.accessibilityLabel
     accessibilityHint = content.accessibilityHint
   }
 
@@ -160,7 +169,6 @@ public final class DayView: UIView {
   private let invariantViewProperties: InvariantViewProperties
   private let backgroundLayer: CAShapeLayer
   private let highlightLayer: CAShapeLayer?
-  private let label: UILabel
 
   private var feedbackGenerator: UISelectionFeedbackGenerator?
 
@@ -235,10 +243,12 @@ extension DayView {
 
     public init(
       dayText: String,
+      eventCountText: String,
       accessibilityLabel: String?,
       accessibilityHint: String?
     ) {
       self.dayText = dayText
+        self.eventCountText = eventCountText
       self.accessibilityLabel = accessibilityLabel
       self.accessibilityHint = accessibilityHint
     }
@@ -246,6 +256,7 @@ extension DayView {
     // MARK: Public
 
     public let dayText: String
+    public let eventCountText: String
     public let accessibilityLabel: String?
     public let accessibilityHint: String?
   }

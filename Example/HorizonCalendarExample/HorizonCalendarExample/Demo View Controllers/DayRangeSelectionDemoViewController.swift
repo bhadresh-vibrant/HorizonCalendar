@@ -96,7 +96,7 @@ final class DayRangeSelectionDemoViewController: BaseDemoViewController {
       return DayView.calendarItemModel(
         invariantViewProperties: invariantViewProperties,
         content: .init(
-          dayText: "\(day.day)",
+            dayText: "\(day.day)", eventCountText: "",
           accessibilityLabel: date.map { dayDateFormatter.string(from: $0) },
           accessibilityHint: nil
         )
