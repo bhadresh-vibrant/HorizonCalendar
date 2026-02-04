@@ -28,13 +28,23 @@ public final class DayView: UIView {
     @IBOutlet weak var eventCounterLabel: UILabel!
     
     private func loadFromNib() {
-        let nib = UINib(nibName: "DayView", bundle: Bundle(for: DayView.self))
-        nib.instantiate(withOwner: self, options: nil)
+      let nib = UINib(
+          nibName: "DayView",
+          bundle: Bundle.module   // ✅ REQUIRED for Swift Package
+      )
+  
+      guard
+          let view = nib.instantiate(withOwner: self, options: nil).first as? UIView
+      else {
+          fatalError("DayView.xib not found or root view not set")
+      }
+  
+      contentView = view
+      contentView.frame = bounds
+      contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      addSubview(contentView)
+  }
 
-        contentView.frame = bounds
-        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        addSubview(contentView)
-    }
 
   fileprivate init(invariantViewProperties: InvariantViewProperties) {
     self.invariantViewProperties = invariantViewProperties
