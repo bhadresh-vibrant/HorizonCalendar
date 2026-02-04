@@ -15,7 +15,10 @@ let package = Package(
   targets: [
     .target(
       name: "HorizonCalendar",
-      path: "Sources"
+      path: "Sources",
+      resources: [
+        .process("DayView.xib")   // 👈 REQUIRED
+      ]
     ),
     .testTarget(
       name: "HorizonCalendarTests",
