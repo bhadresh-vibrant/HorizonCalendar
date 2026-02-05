@@ -85,6 +85,8 @@ public final class DayView: UIView {
           eventCounterLabel.font = invariantViewProperties.eventFont
           dayLabel.textAlignment = invariantViewProperties.textAlignment
           dayLabel.textColor = invariantViewProperties.textColor
+          eventCounterLabel.textColor = invariantViewProperties.eventTextColor
+          indicateView.backgroundColor = invariantViewProperties.eventTextColor
       }
 
     self.isUserInteractionEnabled = isUserInteractionEnabled
@@ -354,6 +356,14 @@ extension DayView {
         return .black
       }
     }()
+      
+      public var eventTextColor: UIColor = {
+        if #available(iOS 13.0, *) {
+          return .label
+        } else {
+          return .black
+        }
+      }()
 
     /// The accessibility traits of the `DayView`.
     public var accessibilityTraits = UIAccessibilityTraits.staticText
@@ -369,8 +379,10 @@ extension DayView {
       hasher.combine(backgroundShapeDrawingConfig)
       hasher.combine(highlightShapeDrawingConfig)
       hasher.combine(font)
+      hasher.combine(eventFont)
       hasher.combine(textAlignment)
       hasher.combine(textColor)
+      hasher.combine(eventTextColor)
       hasher.combine(accessibilityTraits)
     }
 
