@@ -26,6 +26,7 @@ public final class DayView: UIView {
     @IBOutlet weak var dayLabel: UILabel!
     @IBOutlet weak var indicateView: UIView!
     @IBOutlet weak var eventCounterLabel: UILabel!
+    @IBOutlet weak var eventView: UIView!
     
     private func loadFromNib() {
       let nib = UINib(
@@ -81,6 +82,7 @@ public final class DayView: UIView {
       loadFromNib()
       if dayLabel != nil {
           dayLabel.font = invariantViewProperties.font
+          eventCounterLabel.font = invariantViewProperties.eventFont
           dayLabel.textAlignment = invariantViewProperties.textAlignment
           dayLabel.textColor = invariantViewProperties.textColor
       }
@@ -170,7 +172,14 @@ public final class DayView: UIView {
 
   fileprivate func setContent(_ content: Content) {
     dayLabel.text = content.dayText
-      eventCounterLabel.text = content.eventCountText
+      eventCounterLabel.text = ""
+      eventView.isHidden = true
+      if Int(content.eventCountText) ?? 0 > 0 {
+          eventCounterLabel.text = content.eventCountText
+          eventView.isHidden = false
+      }
+      indicateView.backgroundColor = .green
+      indicateView.layer.cornerRadius = indicateView.bounds.size.height / 2
       eventCounterLabel.textColor = .green
       accessibilityLabel = content.accessibilityLabel
     accessibilityHint = content.accessibilityHint
@@ -332,6 +341,7 @@ extension DayView {
 
     /// The font of the day's label.
     public var font = UIFont.systemFont(ofSize: 18)
+      public var eventFont = UIFont.systemFont(ofSize: 16)
 
     /// The text alignment of the day's label.
     public var textAlignment = NSTextAlignment.center
